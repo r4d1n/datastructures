@@ -37,7 +37,7 @@ func (n *ListNode) Append(d int) *ListNode {
 	return current.next
 }
 
-// Delete a node from a linked list
+// Delete a node from a linked list and return it or nil if not found
 func (n *ListNode) Delete(d int) *ListNode {
 	current := n
 	if current.data == d {
@@ -50,7 +50,7 @@ func (n *ListNode) Delete(d int) *ListNode {
 		}
 		current = current.next
 	}
-	return n
+	return nil // not found
 }
 
 // GetKthFromEnd returns the node k places from the end of the list
@@ -92,28 +92,27 @@ type Stack struct {
 
 // NewStack returns a new Stack
 func NewStack() *Stack {
-	var n *ListNode
-	return &Stack{top: n}
+	return &Stack{top: nil}
 }
 
-// Pop removes the top item from the Stack and returns it
-func (s *Stack) Pop() *ListNode {
+// Pop removes the top item from the Stack and returns a pointer to its data
+func (s *Stack) Pop() *int {
 	if s.top != nil {
-		result := s.top
+		data := s.top.data
 		s.top = s.top.next
-		return result
+		return &data
 	}
 	return nil
 }
 
-// Push adds a new item to the top of the Stack
-func (s *Stack) Push(d int) *ListNode {
+// Push adds a new item to the top of the Stack and returns the new length
+func (s *Stack) Push(d int) int {
 	n := &ListNode{
 		data: d,
 		next: s.top,
 	}
 	s.top = n
-	return s.top
+	return s.Length()
 }
 
 // Peek returns the top item without removing it from the Stack
@@ -125,6 +124,57 @@ func (s *Stack) Peek() int {
 func (s *Stack) Length() int {
 	if s.top != nil {
 		return s.top.Length()
+	}
+	return 0
+}
+
+// Queue is a First-In-First-Out data structure
+type Queue struct {
+	first *ListNode
+	last  *ListNode
+}
+
+// NewQueue returns a new Queue
+func NewQueue() *Queue {
+	return &Queue{
+		first: nil,
+		last:  nil,
+	}
+}
+
+// Enqueue adds an item to the end of the Queue and returns the new length
+func (s *Queue) Enqueue(d int) int {
+	n := &ListNode{
+		data: d,
+		next: nil,
+	}
+	if s.first == nil {
+		s.last = n
+		s.first = s.last
+	} else {
+		s.last.next = n
+		s.last = s.last.next
+	}
+	return s.Length()
+}
+
+// Dequeue removes an item from the front of the Queue and returns a pointer to its data
+func (s *Queue) Dequeue() *int {
+	if s.first != nil {
+		data := s.first.data
+		s.first = s.first.next
+		if s.first == nil {
+			s.last = nil
+		}
+		return &data
+	}
+	return nil
+}
+
+// Length returns the number of items in the Queue
+func (s *Queue) Length() int {
+	if s.first != nil {
+		return s.first.Length()
 	}
 	return 0
 }

@@ -65,7 +65,6 @@ func TestLinkedListLength(t *testing.T) {
 }
 
 // Stack tests
-
 func TestStackPush(t *testing.T) {
 	s := datastructures.NewStack()
 	if s.Length() != 0 {
@@ -74,15 +73,16 @@ func TestStackPush(t *testing.T) {
 	// loop through numbers, Push() and test behavior
 	nums := []int{2, 3, 4, 5, 6, 7, 8, 9, 10}
 	for i, n := range nums {
-		s.Push(n)
-		if s.Length() != i+1 {
-			t.Errorf("Unexpected length: %v", s.Length())
+		len := s.Push(n)
+		if len != i+1 {
+			t.Errorf("Unexpected length: %v", len)
 		}
 		if s.Peek() != n {
 			t.Errorf("Unexpected value: %v", s.Peek())
 		}
 	}
 }
+
 func TestStackPop(t *testing.T) {
 	s := datastructures.NewStack()
 	// Pop() should return nil if the stack is empty
@@ -92,5 +92,55 @@ func TestStackPop(t *testing.T) {
 	result1 := s.Pop()
 	if result1 != nil {
 		t.Errorf("Unexpected result: %v", result1)
+	}
+	nums := []int{2, 3, 4, 5, 6, 7, 8, 9, 10}
+	for _, n := range nums {
+		s.Push(n)
+	}
+	for s.Length() > 0 {
+		item := s.Pop()
+		if *item != nums[s.Length()] {
+			t.Errorf("Unexpected result: %v should be %v", *item, nums[s.Length()])
+		}
+	}
+}
+
+// Queue tests
+func TestQueueEnqueue(t *testing.T) {
+	q := datastructures.NewQueue()
+	if q.Length() != 0 {
+		t.Errorf("Unexpected length: %v", q.Length())
+	}
+	// loop through numbers, Enqueue() and test behavior
+	nums := []int{2, 3, 4, 5, 6, 7, 8, 9, 10}
+	for i, n := range nums {
+		q.Enqueue(n)
+		if q.Length() != i+1 {
+			t.Errorf("Unexpected length: %v", q.Length())
+		}
+	}
+}
+
+func TestQueueDequeue(t *testing.T) {
+	q := datastructures.NewQueue()
+	// Dequeue() should return nil if the queue is empty
+	if q.Length() != 0 {
+		t.Errorf("Unexpected length: %v", q.Length())
+	}
+	result1 := q.Dequeue()
+	if result1 != nil {
+		t.Errorf("Unexpected result: %v", result1)
+	}
+	nums := []int{2, 3, 4, 5, 6, 7, 8, 9, 10}
+	for _, n := range nums {
+		q.Enqueue(n)
+	}
+	index := 0
+	for q.Length() > 0 {
+		item := q.Dequeue()
+		if *item != nums[index] {
+			t.Errorf("Unexpected result: %v should be %v", *item, nums[q.Length()])
+		}
+		index += 1
 	}
 }
